@@ -131,7 +131,7 @@ export function OrderDetails() {
             </TableBody>
             <TableFooter>
               <TableRow>
-                <TableCell colSpan={3} className="text-right">
+                <TableCell colSpan={3}>
                   <span className="font-medium text-muted-foreground">
                     Total do pedido
                   </span>
