@@ -1,9 +1,11 @@
+import { useMutation } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { registerRestaurant } from '@/api/register-restaurant'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,12 +15,6 @@ const SignUpForm = z.object({
   restaurantName: z.string().min(3, 'Nome muito curto'),
   managerName: z.string().min(3, 'Nome muito curto'),
   phone: z.string().min(11, 'Telefone muito curto'),
-  street: z.string().min(3, 'Rua muito curta'),
-  number: z.number().min(1, 'Número muito curto'),
-  complement: z.string().min(3, 'Complemento muito curto'),
-  city: z.string().min(3, 'Cidade muito curta'),
-  state: z.string().min(2, 'Estado muito curto'),
-  zip: z.string().min(8, 'CEP muito curto'),
 })
 
 type SignUpFormType = z.infer<typeof SignUpForm>
@@ -32,16 +28,24 @@ export function SignUp() {
 
   const navigate = useNavigate()
 
+  const { mutateAsync: registerRestaurantFn } = useMutation({
+    mutationFn: registerRestaurant,
+  })
+
   async function handleSignUp(data: SignUpFormType) {
     try {
-      console.log(data)
+      await registerRestaurantFn({
+        email: data.email,
+        restaurantName: data.restaurantName,
+        managerName: data.managerName,
+        phone: data.phone,
+      })
 
-      await new Promise((resolve) => setTimeout(resolve, 1000))
       toast.success('Restaurante cadastrado com sucesso!', {
         action: {
           label: 'login',
           onClick: () => {
-            navigate('/sign-in')
+            navigate(`/sign-in?email=${data.email}`)
           },
         },
       })
@@ -99,30 +103,9 @@ export function SignUp() {
               <Label htmlFor="email">E-mail</Label>
               <Input id="email" type="email" {...register('email')} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="zip">CEP</Label>
-              <Input id="zip" type="text" {...register('zip')} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="street">Rua</Label>
-              <Input id="street" type="text" {...register('street')} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="number">Número</Label>
-              <Input id="number" type="number" {...register('number')} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="complement">Complemento</Label>
-              <Input id="complement" type="text" {...register('complement')} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="city">Cidade</Label>
-              <Input id="city" type="text" {...register('city')} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="state">Estado</Label>
-              <Input id="state" type="text" {...register('state')} />
-            </div>
+            {errors.email && (
+              <p className="text-xs text-red-400">{errors.email.message}</p>
+            )}
 
             <Button disabled={isSubmitting} className="w-full" type="submit">
               Criar conta
