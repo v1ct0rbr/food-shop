@@ -1,4 +1,4 @@
-import { Utensils } from 'lucide-react'
+import { DollarSign } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -9,7 +9,7 @@ export function MonthCanceledOrdersAmountCard() {
         <CardTitle className="text-base font-semibold">
           Cancelamentos (mês)
         </CardTitle>
-        <Utensils className="h-4 w-4 text-muted-foreground" />
+        <DollarSign className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
         <span className="text-2xl font-bold tracking-tight">32</span>
