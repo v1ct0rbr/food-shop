@@ -1,6 +1,6 @@
 import { api } from '@/lib/axios'
 
-type UserType = {
+type ProfileResponse = {
   id: string
   name: string
   email: string
@@ -10,7 +10,7 @@ type UserType = {
   updatedAt: Date | null
 }
 
-export async function getProfile(): Promise<UserType> {
+export async function getProfile(): Promise<ProfileResponse> {
   const response = await api.get('/me')
   return response.data
 }
