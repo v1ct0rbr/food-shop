@@ -1,6 +1,6 @@
 import { api } from '@/lib/axios'
 
-type ManagedRestaurantResponse = {
+export type ManagedRestaurantResponse = {
   id: string
   name: string
   createdAt: Date | null
