@@ -1,5 +1,6 @@
 import { ArrowRight, Search, X } from 'lucide-react'
 
+import { OrderStatus } from '@/components/OrderStatus'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { TableCell, TableRow } from '@/components/ui/table'
@@ -9,20 +10,16 @@ import { formatDistance } from '@/utils/DateUtils'
 import { OrderDetails } from './order-details'
 
 interface OrderTableRowProps {
-  id: string
-  createdAt: Date
-  status: string
-  customer: string
-  total: number
+  order: {
+    orderId: string
+    createdAt: Date
+    status: 'pending' | 'canceled' | 'processing' | 'delivering' | 'delivered'
+    customerName: string
+    total: number
+  }
 }
 
-export function OrderTableRow({
-  id,
-  createdAt,
-  status,
-  customer,
-  total,
-}: OrderTableRowProps) {
+export function OrderTableRow({ order }: OrderTableRowProps) {
   return (
     <TableRow>
       <TableCell>
@@ -37,18 +34,19 @@ export function OrderTableRow({
           <OrderDetails />
         </Dialog>
       </TableCell>
-      <TableCell className="font-mono text-xs font-medium">{id}</TableCell>
+      <TableCell className="font-mono text-xs font-medium">
+        {order.orderId}
+      </TableCell>
       <TableCell className="text-muted-foreground">
-        {formatDistance(createdAt)}
+        {formatDistance(order.createdAt)}
       </TableCell>
       <TableCell>
-        <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-slate-400"></span>
-          <span className="font-medium text-muted-foreground">{status}</span>
-        </div>
+        <OrderStatus status={order.status} />
       </TableCell>
-      <TableCell className="font-medium">{customer}</TableCell>
-      <TableCell className="font-medium">{formatCurrency(total)}</TableCell>
+      <TableCell className="font-medium">{order.customerName}</TableCell>
+      <TableCell className="font-medium">
+        {formatCurrency(order.total)}
+      </TableCell>
 
       <TableCell>
         <Button variant="outline" size="sm">
