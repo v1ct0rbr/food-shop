@@ -1,9 +1,12 @@
-type OrderStatus =
-  | 'pending'
-  | 'canceled'
-  | 'processing'
-  | 'delivering'
-  | 'delivered'
+export enum OrderStatusEnum {
+  pending,
+  canceled,
+  processing,
+  delivering,
+  delivered,
+}
+
+export type OrderStatus = keyof typeof OrderStatusEnum
 
 export function OrderStatus({ status }: { status: OrderStatus }) {
   const statusColor: Record<OrderStatus, { name: string; color: string }> = {

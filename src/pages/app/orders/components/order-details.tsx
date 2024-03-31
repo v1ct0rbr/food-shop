@@ -1,3 +1,7 @@
+import { useQuery } from '@tanstack/react-query'
+
+import { getOrderDetails } from '@/api/get-order-details'
+import { OrderStatus } from '@/components/OrderStatus'
 import {
   DialogContent,
   DialogDescription,
@@ -13,15 +17,27 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { formatCurrency } from '@/utils/CurrencyUtils'
-import { formatDistance } from '@/utils/DateUtils'
+import { formatCurrencyInCents } from '@/utils/CurrencyUtils'
+import { formatDistance } from '@/utils/FormatDateUtils'
 
-export function OrderDetails() {
+interface OrderDetailsProps {
+  orderId: string
+  open: boolean
+}
+
+export function OrderDetails({ orderId, open }: OrderDetailsProps) {
+  const { data: orderDetails } = useQuery({
+    queryKey: ['order', orderId],
+    queryFn: () => getOrderDetails(orderId),
+    enabled: open,
+    staleTime: 10000,
+  })
+
   return (
     <div>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Pedido: 1231sadfas</DialogTitle>
+          <DialogTitle>Pedido: {orderDetails?.id}</DialogTitle>
           <DialogDescription>Order Details</DialogDescription>
         </DialogHeader>
         <div className="space-y-6">
@@ -29,12 +45,9 @@ export function OrderDetails() {
             <TableRow>
               <TableCell className="text-muted-foreground">Status</TableCell>
               <TableCell className="flex justify-end">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-slate-400" />
-                  <span className="font-medium text-muted-foreground">
-                    Pendente
-                  </span>
-                </div>
+                {orderDetails?.status && (
+                  <OrderStatus status={orderDetails.status} />
+                )}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -42,7 +55,7 @@ export function OrderDetails() {
               <TableCell className="flex justify-end">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-muted-foreground">
-                    Victor Queiroga
+                    {orderDetails?.customer.name}
                   </span>
                 </div>
               </TableCell>
@@ -52,7 +65,7 @@ export function OrderDetails() {
               <TableCell className="flex justify-end">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-muted-foreground">
-                    (83) 99999-9999
+                    {orderDetails?.customer.phone ?? 'Não informado'}
                   </span>
                 </div>
               </TableCell>
@@ -62,7 +75,7 @@ export function OrderDetails() {
               <TableCell className="flex justify-end">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-muted-foreground">
-                    contato@victorqueiroga.com
+                    {orderDetails?.customer.email}
                   </span>
                 </div>
               </TableCell>
@@ -72,7 +85,8 @@ export function OrderDetails() {
               <TableCell className="flex justify-end">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-muted-foreground">
-                    {formatDistance(new Date())}
+                    {orderDetails?.createdAt &&
+                      formatDistance(orderDetails.createdAt)}
                   </span>
                 </div>
               </TableCell>
@@ -88,46 +102,18 @@ export function OrderDetails() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell>Produto 1</TableCell>
-                <TableCell className="text-right">1</TableCell>
-                <TableCell className="text-right">
-                  {formatCurrency(99.99)}
-                </TableCell>
-                <TableCell className="text-right">
-                  {formatCurrency(99.99)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Produto 2</TableCell>
-                <TableCell className="text-right">1</TableCell>
-                <TableCell className="text-right">
-                  {formatCurrency(105.59)}
-                </TableCell>
-                <TableCell className="text-right">
-                  {formatCurrency(111.99)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Produto 3</TableCell>
-                <TableCell className="text-right">1</TableCell>
-                <TableCell className="text-right">
-                  {formatCurrency(56.95)}
-                </TableCell>
-                <TableCell className="text-right">
-                  {formatCurrency(99.99)}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Produto 4</TableCell>
-                <TableCell className="text-right">1</TableCell>
-                <TableCell className="text-right">
-                  {formatCurrency(99.99)}
-                </TableCell>
-                <TableCell className="text-right">
-                  {formatCurrency(99.99)}
-                </TableCell>
-              </TableRow>
+              {orderDetails?.orderItems.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.product.name}</TableCell>
+                  <TableCell className="text-right">{item.quantity}</TableCell>
+                  <TableCell className="text-right">
+                    {formatCurrencyInCents(item.priceInCents)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {formatCurrencyInCents(item.priceInCents * item.quantity)}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
             <TableFooter>
               <TableRow>
@@ -138,7 +124,9 @@ export function OrderDetails() {
                 </TableCell>
                 <TableCell className="text-right">
                   <span className="font-medium text-muted-foreground">
-                    {formatCurrency(411.96)}
+                    {orderDetails &&
+                      orderDetails?.totalInCents &&
+                      formatCurrencyInCents(orderDetails.totalInCents)}
                   </span>
                 </TableCell>
               </TableRow>

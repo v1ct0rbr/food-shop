@@ -4,3 +4,7 @@ export function formatCurrency(value: number): string {
     currency: 'BRL',
   }).format(value)
 }
+
+export function formatCurrencyInCents(value: number): string {
+  return formatCurrency(value / 100)
+}

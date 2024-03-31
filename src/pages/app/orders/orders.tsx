@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
+import { useSearchParams } from 'react-router-dom'
+import { z } from 'zod'
 
 import { getOrders } from '@/api/get-orders'
+import { MyAlertDialog } from '@/components/MyAlertDialog'
 import { Pagination } from '@/components/Pagination'
 import {
   Table,
@@ -13,13 +16,32 @@ import {
 
 import { OrderTableFilters } from './components/order-table-filters'
 import { OrderTableRow } from './components/order-table-row'
+import { OrdersTableRowSkeleton } from './components/orders-table-row-skeleton'
 
 export function Orders() {
-  const { data: orders } = useQuery({
-    queryKey: ['orders'],
-    queryFn: getOrders,
-    staleTime: Infinity,
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const orderId = searchParams.get('orderId')
+  const customerName = searchParams.get('customerName')
+  const status = searchParams.get('status')
+
+  const pageIndex = z.coerce
+    .number()
+    .transform((page) => (page < 1 ? 0 : page - 1))
+    .parse(searchParams.get('page') ?? '0')
+
+  const { data: result, isFetching } = useQuery({
+    queryKey: ['orders', pageIndex, orderId, customerName, status],
+    queryFn: () => getOrders({ pageIndex, orderId, customerName, status }),
+    staleTime: 5000,
   })
+
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set('page', (pageIndex + 1).toString())
+      return state
+    })
+  }
 
   return (
     <>
@@ -45,14 +67,31 @@ export function Orders() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders?.orders.map((order) => (
+              {result?.orders.map((order) => (
                 <OrderTableRow key={order.orderId} order={order} />
               ))}
+              {isFetching &&
+                Array.from({ length: 10 }).map((_, index) => (
+                  <OrdersTableRowSkeleton key={index} />
+                ))}
             </TableBody>
           </Table>
         </div>
-        <Pagination pageIndex={0} totalCount={105} perPage={10} />
+
+        {result && (
+          <Pagination
+            pageIndex={result.meta.pageIndex}
+            totalCount={result.meta.totalCount}
+            perPage={result.meta.perPage}
+            onPageChange={handlePaginate}
+          />
+        )}
       </div>
+      <MyAlertDialog
+        open={false}
+        title="Atençao"
+        description={`Tem certeza que deseja cancelar o pedido?`}
+      ></MyAlertDialog>
     </>
   )
 }

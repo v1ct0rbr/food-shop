@@ -1,10 +1,4 @@
-import { format, formatDistanceToNow } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-
-export const formatDate = (date: Date): string => {
-  return format(date, 'dd/MM/yyyy', { locale: ptBR })
-}
-
-export const formatDistance = (date: Date): string => {
-  return formatDistanceToNow(date, { locale: ptBR, addSuffix: true })
+export function subtractDays(date: Date, days: number): Date {
+  const daysAgo = new Date(date.getTime() - days * 24 * 60 * 60 * 1000)
+  return daysAgo
 }
