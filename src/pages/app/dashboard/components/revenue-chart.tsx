@@ -1,12 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
 import { subDays } from 'date-fns'
-import { useState } from 'react'
+import { Loader2 } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 import {
   CartesianGrid,
   Line,
   LineChart,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts'
@@ -22,7 +24,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { formatCurrencyInCents } from '@/utils/CurrencyUtils'
+import { formatCurrency } from '@/utils/CurrencyUtils'
 
 export function RevenueChart() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
@@ -39,6 +41,13 @@ export function RevenueChart() {
     if (!range) return
     setDateRange(range)
   }
+
+  const chartData = useMemo(() => {
+    return data?.map((item) => ({
+      date: item.date,
+      receipt: item.receipt / 100,
+    }))
+  }, [data])
 
   return (
     <Card className="col-span-6">
@@ -58,16 +67,16 @@ export function RevenueChart() {
         </div>
       </CardHeader>
       <CardContent>
-        {data && (
+        {chartData ? (
           <ResponsiveContainer width="100%" height={240}>
-            <LineChart data={data} style={{ fontSize: 12 }}>
+            <LineChart data={chartData} style={{ fontSize: 12 }}>
               <YAxis
                 dataKey="receipt"
                 stroke="#888"
                 axisLine={false}
                 tickLine={false}
                 width={80}
-                tickFormatter={(value) => formatCurrencyInCents(value)}
+                tickFormatter={(value) => formatCurrency(value)}
               />
               <XAxis
                 dataKey="date"
@@ -76,6 +85,10 @@ export function RevenueChart() {
                 dy={16}
               ></XAxis>
               <CartesianGrid vertical={false} className="stroke-muted" />
+              <Tooltip
+                labelClassName="text-[#888]"
+                formatter={(value) => formatCurrency(value as number)}
+              />
               <Line
                 type="linear"
                 strokeWidth={2}
@@ -84,6 +97,10 @@ export function RevenueChart() {
               />
             </LineChart>
           </ResponsiveContainer>
+        ) : (
+          <div className="flex h-[240px] w-full items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
         )}
       </CardContent>
     </Card>

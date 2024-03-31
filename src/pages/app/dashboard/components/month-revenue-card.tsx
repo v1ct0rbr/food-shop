@@ -5,6 +5,8 @@ import { getMonthRevenue } from '@/api/get-dashboard-metrics'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatCurrencyInCents } from '@/utils/CurrencyUtils'
 
+import { MetricCardSkeleton } from './metric-card-skeleton'
+
 export function MonthRevenueCard() {
   const { data: mounthRevenue } = useQuery({
     queryKey: ['metrics', 'mounth-revenue'],
@@ -21,7 +23,7 @@ export function MonthRevenueCard() {
         <DollarSign className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        {mounthRevenue && (
+        {mounthRevenue ? (
           <>
             <span className="text-2xl font-bold tracking-tight">
               {formatCurrencyInCents(mounthRevenue.receipt)}
@@ -39,6 +41,8 @@ export function MonthRevenueCard() {
               em relação ao mês passado
             </p>
           </>
+        ) : (
+          <MetricCardSkeleton />
         )}
       </CardContent>
     </Card>

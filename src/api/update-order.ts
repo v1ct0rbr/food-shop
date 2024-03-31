@@ -9,6 +9,13 @@ interface UpdateOrderResponse {
   message: string
 }
 
+export async function aproveOrder({ orderId }: UpdateOrderProps) {
+  const response = await api.patch<UpdateOrderResponse>(
+    `/orders/${orderId}/approve`,
+  )
+  return response.data
+}
+
 export async function cancelOrder({ orderId }: UpdateOrderProps) {
   const response = await api.patch<UpdateOrderResponse>(
     `/orders/${orderId}/cancel`,
@@ -26,13 +33,6 @@ export async function deliverOrder({ orderId }: UpdateOrderProps) {
 export async function dispatchOrder({ orderId }: UpdateOrderProps) {
   const response = await api.patch<UpdateOrderResponse>(
     `/orders/${orderId}/dispatch`,
-  )
-  return response.data
-}
-
-export async function aproveOrder({ orderId }: UpdateOrderProps) {
-  const response = await api.patch<UpdateOrderResponse>(
-    `/orders/${orderId}/approve`,
   )
   return response.data
 }

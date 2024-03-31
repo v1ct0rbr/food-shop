@@ -4,6 +4,8 @@ import { ShoppingBag } from 'lucide-react'
 import { getMonthOrdersAmount } from '@/api/get-dashboard-metrics'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
+import { MetricCardSkeleton } from './metric-card-skeleton'
+
 export function MonthOrdersAmountCard() {
   const { data: mountOrdersAmount } = useQuery({
     queryKey: ['metrics', 'mounth-orders-amount'],
@@ -17,7 +19,7 @@ export function MonthOrdersAmountCard() {
         <ShoppingBag className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        {mountOrdersAmount && (
+        {mountOrdersAmount ? (
           <>
             <span className="text-2xl font-bold tracking-tight">
               {mountOrdersAmount.amount}
@@ -36,6 +38,8 @@ export function MonthOrdersAmountCard() {
               em relação ao mês passado
             </p>
           </>
+        ) : (
+          <MetricCardSkeleton />
         )}
       </CardContent>
     </Card>
