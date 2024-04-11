@@ -70,6 +70,7 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
         updateOrderStatusOnCache(orderId, 'processing')
       },
     })
+
   const { mutateAsync: dispatchOrderFn, isPending: isDispatchingOrder } =
     useMutation({
       mutationFn: dispatchOrder,
