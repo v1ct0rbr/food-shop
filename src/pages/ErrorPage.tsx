@@ -16,12 +16,12 @@ type Error = {
   status: number
 }
 
+const getMessageByCode = (code: number) => {
+  return ERROR_TYPES.find((err) => err.code === code)?.message
+}
+
 export function ErrorPage() {
   const error = useRouteError() as Error
-
-  const getMessageByCode = (code: number) => {
-    return ERROR_TYPES.find((err) => err.code === code)?.message
-  }
 
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-2">

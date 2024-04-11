@@ -20,6 +20,7 @@ export function OrderStatus({ status }: { status: OrderStatus }) {
   return (
     <div className="flex items-center gap-2">
       <span
+        data-testid="badge"
         className={`h-2 w-2 rounded-full ${statusColor[status].color}`}
       ></span>
       <span className="font-medium text-muted-foreground">
