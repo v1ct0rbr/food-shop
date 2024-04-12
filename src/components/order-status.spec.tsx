@@ -7,7 +7,6 @@ describe('OrderStatus', () => {
 
     const statusText = wrapper.getByText('Pendente')
     const badgeElement = wrapper.getByTestId('badge')
-    console.log(badgeElement.outerHTML)
 
     expect(statusText).toBeInTheDocument()
     expect(badgeElement).toHaveClass('bg-yellow-400')
@@ -20,7 +19,6 @@ describe('OrderStatus', () => {
     const statusText = wrapper.getByText('Cancelado')
 
     const badgeElement = wrapper.getByTestId('badge')
-    console.log(badgeElement.outerHTML)
 
     expect(statusText).toBeInTheDocument()
     expect(badgeElement).toHaveClass('bg-rose-500')
@@ -33,7 +31,6 @@ describe('OrderStatus', () => {
     const statusText = wrapper.getByText('Em preparo')
 
     const badgeElement = wrapper.getByTestId('badge')
-    console.log(badgeElement.outerHTML)
 
     expect(statusText).toBeInTheDocument()
     expect(badgeElement).toHaveClass('bg-amber-500')
@@ -46,7 +43,6 @@ describe('OrderStatus', () => {
     const statusText = wrapper.getByText('Entregando')
 
     const badgeElement = wrapper.getByTestId('badge')
-    console.log(badgeElement.outerHTML)
 
     expect(statusText).toBeInTheDocument()
     expect(badgeElement).toHaveClass('bg-amber-500')
@@ -59,7 +55,6 @@ describe('OrderStatus', () => {
     const statusText = wrapper.getByText('Entregue')
 
     const badgeElement = wrapper.getByTestId('badge')
-    console.log(badgeElement.outerHTML)
 
     expect(statusText).toBeInTheDocument()
     expect(badgeElement).toHaveClass('bg-emerald-500')
