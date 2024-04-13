@@ -15,7 +15,7 @@ describe('OrderStatus', () => {
   /* Testando o status "canceled" */
   it('should display the right text when order sttaus is canceled ', () => {
     const wrapper = render(<OrderStatus status="canceled" />)
-    wrapper.debug()
+
     const statusText = wrapper.getByText('Cancelado')
 
     const badgeElement = wrapper.getByTestId('badge')
@@ -27,7 +27,7 @@ describe('OrderStatus', () => {
   /* Testando o status "processing" */
   it('should display the right text when order sttaus is processing ', () => {
     const wrapper = render(<OrderStatus status="processing" />)
-    wrapper.debug()
+
     const statusText = wrapper.getByText('Em preparo')
 
     const badgeElement = wrapper.getByTestId('badge')
@@ -39,7 +39,7 @@ describe('OrderStatus', () => {
   /* Testando o status "delivering" */
   it('should display the right text when order sttaus is delivering ', () => {
     const wrapper = render(<OrderStatus status="delivering" />)
-    wrapper.debug()
+
     const statusText = wrapper.getByText('Entregando')
 
     const badgeElement = wrapper.getByTestId('badge')
@@ -51,7 +51,7 @@ describe('OrderStatus', () => {
   /* Testando o status "delivered" */
   it('should display the right text when order sttaus is delivered ', () => {
     const wrapper = render(<OrderStatus status="delivered" />)
-    wrapper.debug()
+
     const statusText = wrapper.getByText('Entregue')
 
     const badgeElement = wrapper.getByTestId('badge')
