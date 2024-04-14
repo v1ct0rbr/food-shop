@@ -31,7 +31,7 @@ export function MonthCanceledOrdersAmountCard() {
             <p className="text-xs text-muted-foreground">
               {mounthCanceledOrders.diffFromLastMonth < 0 ? (
                 <span className="mr-2 text-emerald-500 dark:text-emerald-400">
-                  -{mounthCanceledOrders?.diffFromLastMonth}%
+                  {mounthCanceledOrders?.diffFromLastMonth}%
                 </span>
               ) : (
                 <span className="mr-2  text-rose-500 dark:text-rose-400">
