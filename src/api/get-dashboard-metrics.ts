@@ -1,21 +1,21 @@
 import { api } from '@/lib/axios'
 
-interface DayOrdersAmountResponse {
+export interface DayOrdersAmountResponse {
   amount: number
   diffFromYesterday: number
 }
 
-interface MonthOrdersAmountResponse {
+export interface MonthOrdersAmountResponse {
   amount: number
   diffFromLastMonth: number
 }
 
-interface MonthCanceledOrdersAmountResponse {
+export interface MonthCanceledOrdersAmountResponse {
   amount: number
   diffFromLastMonth: number
 }
 
-interface MonthRevenue {
+export interface MonthRevenue {
   receipt: number
   diffFromLastMonth: number
 }

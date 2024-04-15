@@ -4,7 +4,7 @@ import { api } from '@/lib/axios'
 import { subtractDays } from '@/utils/DateUtils'
 import { formatDateQuery } from '@/utils/FormatDateUtils'
 
-type DailyReceipt = {
+export type DailyReceipt = {
   date: string
   receipt: number
 }
